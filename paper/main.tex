@@ -1,0 +1,367 @@
+\documentclass[11pt,a4paper]{article}
+
+% ── Packages ──
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{lineno}
+
+\linenumbers
+
+% ── Macros ──
+\newcommand{\vmr}{\mathrm{VMR}}
+\newcommand{\um}{\,\si{\micro\meter}}
+\newcommand{\chisq}{\chi^2}
+
+% ── Title ──
+\title{Multiscale Spatial Fingerprints Reveal Cell Type Organization\\in the Mouse Brain}
+
+\author{
+  Pretham Voruganti\textsuperscript{1}
+  \\[0.5em]
+  \small\textsuperscript{1}Independent Researcher
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% ══════════════════════════════════════════════════════════════
+\begin{abstract}
+Spatial transcriptomics reveals the positions of thousands of cell types across
+tissue, but current analysis tools either operate at a single spatial scale or
+lack interpretable statistical summaries. Here we introduce a multiscale spatial
+fingerprinting framework that quantifies how cell types are organized across
+spatial scales from \SI{40}{\micro\meter} to \SI{1000}{\micro\meter} in the
+mouse brain. Using Allen Brain Cell Atlas MERFISH data
+(\num{1374804} cells across isocortex, hippocampus, and thalamus), we compute
+variance-to-mean ratio (VMR) fingerprints for each cell type at 12 logarithmically
+spaced scales, tested against label-shuffle null models via covariance-aware
+Hotelling's $T^2$ statistics.
+
+We show three principal results.
+First, cell types exhibit robust, grid-placement-independent spatial fingerprints
+whose effect sizes vary over two orders of magnitude (peak VMR ratios
+\numrange{1.2}{36.4}$\times$ null).
+Second, subclass-level fingerprints in isocortex recover known laminar
+architecture, with excitatory subtypes showing layer-specific characteristic
+clustering scales, while thalamic subtypes show distinct nuclear
+compartmentalization signatures.
+Third, cross-type co-occurrence is scale-dependent: isocortical layer types
+predominantly co-localize (96--98\% positive at all scales), whereas thalamic
+nuclear types show mixed, weak associations (49--57\% positive), consistent
+with the distinction between layered and nuclear brain architectures.
+
+The same VMR/chi-squared framework previously applied to protein nanoclusters
+(SMLM, nm scale) and synaptic clustering on dendrites (\si{\micro\meter} scale)
+here detects meaningful structure at the tissue scale (\si{\milli\meter}),
+supporting a universal spatial fingerprinting approach across biological scales
+and geometries.
+\end{abstract}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+% ══════════════════════════════════════════════════════════════
+\section{Introduction}
+\label{sec:intro}
+
+% ── The problem ──
+Spatial transcriptomics technologies---including MERFISH, seqFISH+, Slide-seq,
+and Visium---now routinely resolve the positions and transcriptomic identities of
+millions of cells across tissue sections \citep{Zhang2023}. A central question
+emerging from these datasets is: \emph{how are cell types spatially organized,
+and at what scales does that organization manifest?}
+
+% ── Existing tools and their limitations ──
+Current spatial analysis tools address parts of this question. Squidpy
+\citep{Palla2022} computes neighborhood enrichment at a fixed spatial
+neighborhood radius. SpatialDE \citep{Svensson2018} identifies spatially variable
+genes but operates gene-by-gene, not type-by-type. BANKSY \citep{Singhal2024}
+incorporates spatial context into clustering but does not provide
+scale-resolved statistics. None of these tools produce continuous
+\emph{multiscale spatial fingerprints}---curves that summarize how a cell type's
+clustering varies continuously from fine ($\sim$\SI{40}{\micro\meter}) to coarse
+($\sim$\SI{1000}{\micro\meter}) resolution.
+
+% ── Our approach ──
+Here we apply a multiscale variance-to-mean ratio (VMR) framework, previously
+developed for protein nanocluster detection in super-resolution microscopy and
+synapse clustering on dendritic trees, to the tissue scale. The key idea is
+simple: at each spatial scale, tile the tissue into non-overlapping grid cells,
+count instances of a cell type per cell, and compute the VMR of those counts.
+For a completely random (Poisson) distribution, VMR~$= 1$; clustering produces
+VMR~$> 1$. By sweeping across scales, we obtain a \emph{spatial fingerprint}
+that encodes where and how strongly a cell type clusters.
+
+% ── Null model ──
+Significance is assessed via label-shuffle null models---the strongest available
+control, which preserves all spatial structure and only permutes type-to-position
+assignments. The full VMR curve is tested jointly using a covariance-aware
+Hotelling's $T^2$ statistic with Ledoit--Wolf shrinkage regularization.
+
+% ── Scope ──
+We apply this framework to three brain regions from the Allen Brain Cell Atlas
+MERFISH dataset: isocortex (\num{936281} cells), hippocampal formation
+(\num{304736} cells), and thalamus (\num{133787} cells). We analyze per-type
+fingerprints, cross-type co-occurrence, regional comparisons, and a focused
+comparison of layered (isocortex) versus nuclear (thalamus) organizational
+motifs.
+
+
+% ══════════════════════════════════════════════════════════════
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Dataset}
+\label{sec:dataset}
+
+We used the Allen Brain Cell Atlas MERFISH dataset (MERFISH-C57BL6J-638850)
+\citep{Zhang2023}, which provides spatial coordinates and transcriptomic cell
+type annotations for \num{3938808} cells across the adult mouse brain. Cells
+are annotated at three hierarchical levels: 34 classes, 338 subclasses, and
+1,201 supertypes.
+
+Brain region assignments were obtained by merging cell coordinates with the
+Allen Common Coordinate Framework (CCF v3) parcellation. We analyzed three
+regions: isocortex (CCF division ``Isocortex''), hippocampal formation (``HPF''),
+and thalamus (``TH'').
+
+\subsection{Multiscale VMR Fingerprints}
+\label{sec:vmr}
+
+For a given cell type $t$ with positions $\{(x_i, y_i)\}_{i=1}^{n_t}$:
+
+\begin{enumerate}
+  \item Construct a 2D density grid ($512 \times 512$ pixels) over the region
+    of interest via histogram binning.
+  \item For each spatial scale $s$ in a set of 12 logarithmically spaced
+    scales from \SI{40}{\micro\meter} to \SI{1000}{\micro\meter}:
+    \begin{enumerate}
+      \item Partition the grid into non-overlapping cells of side length $s$.
+      \item Count the number of type-$t$ cells per grid cell.
+      \item Compute $\vmr(s) = \mathrm{Var}(c) / \mathrm{Mean}(c)$.
+    \end{enumerate}
+  \item The resulting curve $\vmr(s)$ is the \emph{spatial fingerprint} of type~$t$.
+\end{enumerate}
+
+Scale selection uses the \texttt{ScaleRange.for\_tissue()} algorithm, which
+generates candidate scales in log-space, converts to grid voxel sizes, deduplicates
+to ensure each scale produces a distinct binning resolution, and enforces a
+minimum resolvable scale of $2 \times (\text{ROI size} / \text{grid size})$.
+
+\subsection{Null Models and Statistical Testing}
+\label{sec:null}
+
+\paragraph{Label-shuffle null.}
+For each of 50 realizations, cell type labels are randomly permuted while
+positions remain fixed. This preserves all spatial structure (density gradients,
+tissue geometry) and tests specifically whether type-to-position assignments are
+non-random.
+
+\paragraph{Covariance-aware chi-squared test.}
+The observed VMR curve $\mathbf{v}_\text{real}$ is compared to the null
+distribution $\{\mathbf{v}_k\}_{k=1}^{K}$ using Hotelling's $T^2$:
+\begin{equation}
+  T^2 = \frac{K}{K+1} (\mathbf{v}_\text{real} - \bar{\mathbf{v}})^\top
+  \hat{\Sigma}^{-1}_\text{reg}
+  (\mathbf{v}_\text{real} - \bar{\mathbf{v}})
+\end{equation}
+where $\hat{\Sigma}_\text{reg} = (1-\lambda)\hat{\Sigma} + \lambda \,
+\mathrm{diag}(\hat{\Sigma})$ is the Ledoit--Wolf shrinkage-regularized
+covariance ($\lambda = 0.02$). The $T^2$ statistic is converted to an
+$F$-statistic with $(p, K-p)$ degrees of freedom.
+
+\paragraph{Effect-size metrics.}
+To avoid over-reliance on $p$-values in this high-powered setting, we report:
+\begin{itemize}
+  \item \textbf{Peak VMR ratio}: $\max_s \vmr_\text{real}(s) / \vmr_\text{null}(s)$
+  \item \textbf{Integrated excess}: $\int [\vmr_\text{ratio}(s) - 1] \, d(\log s)$
+  \item \textbf{Fingerprint width}: scale range (in decades) over which VMR ratio
+    exceeds half its peak
+\end{itemize}
+
+\subsection{Cross-Type Co-occurrence}
+\label{sec:cooccurrence}
+
+For each pair of cell types $(A, B)$ at each scale $s$, we compute the Pearson
+correlation of their binned counts across grid cells:
+\begin{equation}
+  r_{AB}(s) = \mathrm{Corr}\bigl(c_A^{(s)}, c_B^{(s)}\bigr)
+\end{equation}
+Positive values indicate co-localization; negative values indicate segregation.
+Significance is assessed by comparing against the label-shuffle null distribution.
+
+\subsection{Grid Jitter Robustness}
+\label{sec:jitter}
+
+To verify that results are not artifacts of arbitrary grid placement, we repeated
+the full analysis 10 times with random grid origin offsets drawn from
+$\mathrm{Uniform}(-2\Delta, +2\Delta)$ in each axis, where $\Delta$ is the
+grid voxel size. We report the coefficient of variation (CV) of peak VMR ratio
+across jitter trials.
+
+\subsection{Software and Reproducibility}
+
+All analyses were implemented in Python using NumPy, SciPy, Pandas, and
+Matplotlib. Data access used the \texttt{abc\_atlas\_access} package. Code,
+results, and figures are available at
+\url{https://github.com/saivoru777-ship-it/spatial-transcriptomics-fingerprints}.
+
+
+% ══════════════════════════════════════════════════════════════
+\section{Results}
+\label{sec:results}
+
+% ── Result 1 ──
+\subsection{Cell types exhibit robust multiscale spatial fingerprints}
+\label{sec:result1}
+
+% Per-type fingerprints across three regions
+% Effect-size ranking (not significance counting)
+% Grid jitter robustness (CV < 5% for all types)
+% Native vs mislocated type distinction
+% Boundary crop stability
+
+\textbf{[Figure: fig\_per\_type\_fingerprints\_isocortex.pdf]}
+
+\textbf{[Figure: fig\_top\_types\_by\_effect.pdf]}
+
+\textbf{[Figure: fig\_grid\_jitter\_robustness.pdf]}
+
+\textbf{[Figure: fig\_native\_vs\_mislocated.pdf]}
+
+\textbf{[Figure: fig\_boundary\_sensitivity.pdf]}
+
+
+% ── Result 2 ──
+\subsection{Fingerprints recover known anatomical organization}
+\label{sec:result2}
+
+% Subclass-level isocortex: layer types with distinct scales
+% Regional comparison: isocortex vs hippocampus vs thalamus
+% Known biology recovery paragraph
+
+\textbf{[Figure: fig\_isocortex\_subclass\_fingerprints.pdf]}
+
+\textbf{[Figure: fig\_regional\_comparison.pdf]}
+
+
+% ── Result 3 ──
+\subsection{Cross-type spatial association is scale-dependent}
+\label{sec:result3}
+
+% Curated co-occurrence panels
+% Layered vs nuclear topology comparison
+% Cross-type heatmap (supplementary?)
+
+\textbf{[Figure: fig\_curated\_cooccurrence\_isocortex.pdf]}
+
+\textbf{[Figure: fig\_layered\_vs\_nuclear.pdf]}
+
+
+% ══════════════════════════════════════════════════════════════
+\section{Discussion}
+\label{sec:discussion}
+
+% ── Summary of findings ──
+We have shown that multiscale VMR fingerprints provide a compact, interpretable
+summary of cell type spatial organization in the mouse brain. Three properties
+make this framework valuable.
+
+% ── Robustness ──
+\paragraph{Robustness.}
+Fingerprints are stable to grid placement (CV~$< 5\%$ across 10 jitter trials)
+and interior cropping. The extreme effect-size tail is dominated by cell types
+that are rare visitors from adjacent brain regions, clustering tightly at their
+primary anatomical location. When these are separated from region-native types,
+the native effect sizes span a biologically interpretable range
+(peak ratios 1.0--5.8$\times$ for most types, with the habenular MH-LH Glut
+reaching 36$\times$ due to tight nuclear confinement).
+
+% ── Biology recovery ──
+\paragraph{Known biology recovery.}
+Subclass-level fingerprints in isocortex resolve the expected laminar hierarchy:
+L2/3, L4/5, L5, L6, and L6b excitatory subtypes each show distinct clustering
+scales. Glial and vascular types show characteristic small-scale
+($\sim$\SI{40}{\micro\meter}) organization consistent with local microenvironment
+patterning. Hippocampal fingerprints show stronger mesoscale compartmentalization
+than isocortex, consistent with the highly structured dentate gyrus and CA
+subfield architecture.
+
+% ── Layered vs nuclear ──
+\paragraph{Layered versus nuclear organization.}
+The subclass-level co-occurrence comparison between isocortex and thalamus
+reveals qualitatively distinct organizational motifs. Cortical layer types are
+overwhelmingly co-localized at all scales (96--98\% of pairs positive),
+consistent with laminar stacking within shared cortical columns. In contrast,
+thalamic nuclear types show weak, mixed correlations (49--57\% positive), with
+more frequent scale-switching---consistent with a compartmental architecture
+where distinct nuclei occupy non-overlapping territories. This suggests that the
+framework can distinguish between fundamentally different modes of tissue
+organization.
+
+% ── Universality ──
+\paragraph{Universality across biological scales.}
+The same VMR/covariance-aware chi-squared framework has now been applied to three
+distinct biological systems: protein nanoclusters at nm resolution (SMLM),
+synaptic input clustering at \si{\micro\meter} resolution (dendritic trees), and
+cell type organization at \si{\milli\meter} resolution (tissue sections). In each
+case, the framework detects meaningful, scale-specific spatial structure with
+appropriate null models. This convergence supports the concept of a universal
+spatial fingerprinting toolkit for biology.
+
+% ── Limitations ──
+\paragraph{Limitations.}
+Several limitations should be noted. First, in datasets of this size, nearly all
+types are statistically significant, making $p$-values uninformative for
+distinguishing biologically meaningful from trivial effects; we address this by
+reporting effect sizes throughout. Second, Pearson correlation for co-occurrence
+is simple but may miss more complex spatial relationships; future work could
+incorporate mark correlation functions or cross-$K$ statistics. Third, our
+analysis uses 2D projections of a 3D brain; extension to full 3D spatial
+fingerprints would be valuable for datasets with sufficient axial resolution.
+
+% ── Future directions ──
+\paragraph{Future directions.}
+A systematic subclass-level analysis across all brain regions---beyond the
+isocortex and thalamus focus here---could test whether the layered/nuclear
+distinction extends to other organizational motifs (e.g., the nuclear but
+layered cerebellar cortex). Integration with gene expression profiles could
+reveal whether spatial fingerprint similarity predicts transcriptomic similarity.
+
+
+% ══════════════════════════════════════════════════════════════
+\section*{Data Availability}
+
+The Allen Brain Cell Atlas MERFISH dataset is publicly available at
+\url{https://portal.brain-map.org/atlases-and-data/bkp/abc-atlas}. All code,
+computed results, and figures are available at
+\url{https://github.com/saivoru777-ship-it/spatial-transcriptomics-fingerprints}.
+
+
+% ══════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+
+We thank the Allen Institute for Brain Science for making the MERFISH dataset
+publicly available. This work used the \texttt{abc\_atlas\_access} Python package
+for data retrieval.
+
+
+% ══════════════════════════════════════════════════════════════
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}
