@@ -53,14 +53,14 @@ Hotelling's $T^2$ statistics.
 We show three principal results.
 First, cell types exhibit robust, grid-placement-independent spatial fingerprints
 whose effect sizes vary over two orders of magnitude (peak VMR ratios
-\numrange{1.2}{36.4}$\times$ null).
+0.95--36.4$\times$ null across three regions).
 Second, subclass-level fingerprints in isocortex recover known laminar
 architecture, with excitatory subtypes showing layer-specific characteristic
 clustering scales, while thalamic subtypes show distinct nuclear
 compartmentalization signatures.
 Third, cross-type co-occurrence is scale-dependent: isocortical layer types
-predominantly co-localize (96--98\% positive at all scales), whereas thalamic
-nuclear types show mixed, weak associations (49--57\% positive), consistent
+predominantly co-localize (96--100\% positive across scales), whereas thalamic
+nuclear types show mixed, weak associations (46--64\% positive), consistent
 with the distinction between layered and nuclear brain architectures.
 
 The same VMR/chi-squared framework previously applied to protein nanoclusters
@@ -145,7 +145,7 @@ and thalamus (``TH'').
 For a given cell type $t$ with positions $\{(x_i, y_i)\}_{i=1}^{n_t}$:
 
 \begin{enumerate}
-  \item Construct a 2D density grid ($512 \times 512$ pixels) over the region
+  \item Construct a 2D density grid ($256 \times 256$ pixels) over the region
     of interest via histogram binning.
   \item For each spatial scale $s$ in a set of 12 logarithmically spaced
     scales from \SI{40}{\micro\meter} to \SI{1000}{\micro\meter}:
@@ -328,8 +328,8 @@ results, and figures are available at
   \includegraphics[width=\textwidth]{../figures/fig_curated_cooccurrence_isocortex.pdf}
   \caption{Scale-dependent cross-type co-occurrence in isocortex. Curated pairs
   of cell types show Pearson correlation of binned counts across spatial scales.
-  Cortical layer types are overwhelmingly co-localized (96--98\% of pairs
-  positive at all scales), consistent with laminar stacking within shared
+  Cortical layer types are overwhelmingly co-localized (96--100\% of pairs
+  positive across scales), consistent with laminar stacking within shared
   cortical columns.}
   \label{fig:cooccurrence}
 \end{figure}
@@ -363,8 +363,8 @@ and interior cropping. The extreme effect-size tail is dominated by cell types
 that are rare visitors from adjacent brain regions, clustering tightly at their
 primary anatomical location. When these are separated from region-native types,
 the native effect sizes span a biologically interpretable range
-(peak ratios 1.0--5.8$\times$ for most types, with the habenular MH-LH Glut
-reaching 36$\times$ due to tight nuclear confinement).
+(peak ratios 0.95--5.8$\times$ for most types, with the habenular MH-LH Glut
+reaching 36.4$\times$ due to tight nuclear confinement).
 
 % ── Biology recovery ──
 \paragraph{Known biology recovery.}
@@ -380,9 +380,9 @@ subfield architecture.
 \paragraph{Layered versus nuclear organization.}
 The subclass-level co-occurrence comparison between isocortex and thalamus
 reveals qualitatively distinct organizational motifs. Cortical layer types are
-overwhelmingly co-localized at all scales (96--98\% of pairs positive),
+overwhelmingly co-localized at all scales (96--100\% of pairs positive),
 consistent with laminar stacking within shared cortical columns. In contrast,
-thalamic nuclear types show weak, mixed correlations (49--57\% positive), with
+thalamic nuclear types show weak, mixed correlations (46--64\% positive), with
 more frequent scale-switching---consistent with a compartmental architecture
 where distinct nuclei occupy non-overlapping territories. This suggests that the
 framework can distinguish between fundamentally different modes of tissue
@@ -438,5 +438,168 @@ for data retrieval.
 % ══════════════════════════════════════════════════════════════
 \bibliographystyle{unsrtnat}
 \bibliography{references}
+
+
+% ══════════════════════════════════════════════════════════════
+\clearpage
+\appendix
+\renewcommand{\thefigure}{S\arabic{figure}}
+\setcounter{figure}{0}
+
+\section*{Supplementary Figures}
+
+% ── Tissue overview ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_tissue_maps.pdf}
+  \caption{Tissue maps showing cell positions for isocortex, hippocampus, and
+  thalamus regions from the Allen Brain Cell Atlas MERFISH dataset.}
+  \label{fig:tissue_maps}
+\end{figure}
+
+% ── Per-type fingerprints for other regions ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_per_type_fingerprints_hippocampus.pdf}
+  \caption{Multiscale VMR fingerprints for all cell types in hippocampus.}
+  \label{fig:fingerprints_hippocampus}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_per_type_fingerprints_thalamus.pdf}
+  \caption{Multiscale VMR fingerprints for all cell types in thalamus.
+  The habenular MH-LH Glut type shows the strongest effect (peak VMR
+  ratio 36.4$\times$ null) due to tight nuclear confinement.}
+  \label{fig:fingerprints_thalamus}
+\end{figure}
+
+% ── Characteristic scales ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_characteristic_scales.pdf}
+  \caption{Characteristic clustering scales for each cell type, defined as the
+  scale at which peak VMR ratio is observed.}
+  \label{fig:characteristic_scales}
+\end{figure}
+
+% ── Label-shuffle controls ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_label_shuffle_control_isocortex.pdf}
+  \caption{Label-shuffle null model control for isocortex. Observed VMR curves
+  (solid) compared to the distribution of 50 label-shuffle realizations (shaded
+  envelope), demonstrating that spatial fingerprints are not artifacts of label
+  composition or overall density structure.}
+  \label{fig:shuffle_isocortex}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_label_shuffle_control_hippocampus.pdf}
+  \caption{Label-shuffle null model control for hippocampus.}
+  \label{fig:shuffle_hippocampus}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_label_shuffle_control_thalamus.pdf}
+  \caption{Label-shuffle null model control for thalamus.}
+  \label{fig:shuffle_thalamus}
+\end{figure}
+
+% ── Threshold sensitivity ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_threshold_sensitivity.pdf}
+  \caption{Sensitivity of significance calls to the cell count threshold used
+  for including cell types in the analysis.}
+  \label{fig:threshold_sensitivity}
+\end{figure}
+
+% ── Cross-type heatmaps ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_cross_type_heatmap_isocortex.pdf}
+  \caption{Full pairwise cross-type co-occurrence heatmap for isocortex at
+  representative scales. Color indicates Pearson correlation of binned counts.}
+  \label{fig:heatmap_isocortex}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_cross_type_heatmap_hippocampus.pdf}
+  \caption{Full pairwise cross-type co-occurrence heatmap for hippocampus.}
+  \label{fig:heatmap_hippocampus}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_cross_type_heatmap_thalamus.pdf}
+  \caption{Full pairwise cross-type co-occurrence heatmap for thalamus.}
+  \label{fig:heatmap_thalamus}
+\end{figure}
+
+% ── Co-occurrence curves ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_co_occurrence_curves_isocortex.pdf}
+  \caption{Scale-dependent co-occurrence curves for selected cell type pairs
+  in isocortex.}
+  \label{fig:cooccurrence_curves_isocortex}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_co_occurrence_curves_hippocampus.pdf}
+  \caption{Scale-dependent co-occurrence curves for selected cell type pairs
+  in hippocampus.}
+  \label{fig:cooccurrence_curves_hippocampus}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_co_occurrence_curves_thalamus.pdf}
+  \caption{Scale-dependent co-occurrence curves for selected cell type pairs
+  in thalamus.}
+  \label{fig:cooccurrence_curves_thalamus}
+\end{figure}
+
+% ── Curated co-occurrence for other regions ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_curated_cooccurrence_hippocampus.pdf}
+  \caption{Curated cross-type co-occurrence panels for hippocampus, showing
+  biologically motivated cell type pairs.}
+  \label{fig:curated_hippocampus}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_curated_cooccurrence_thalamus.pdf}
+  \caption{Curated cross-type co-occurrence panels for thalamus.}
+  \label{fig:curated_thalamus}
+\end{figure}
+
+% ── Universal comparison ──
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_universal_comparison.pdf}
+  \caption{Universal comparison of VMR fingerprints across biological scales.
+  The same VMR framework applied to protein nanoclusters (SMLM, nm),
+  synaptic inputs (dendrites, \si{\micro\meter}), and cell types
+  (tissue, \si{\milli\meter}) detects scale-specific spatial structure in each
+  system, supporting a universal fingerprinting approach.}
+  \label{fig:universal_comparison}
+\end{figure}
 
 \end{document}
