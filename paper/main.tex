@@ -235,15 +235,54 @@ results, and figures are available at
 % Native vs mislocated type distinction
 % Boundary crop stability
 
-\textbf{[Figure: fig\_per\_type\_fingerprints\_isocortex.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_per_type_fingerprints_isocortex.pdf}
+  \caption{Multiscale VMR fingerprints for all cell types in isocortex. Each curve
+  shows the VMR ratio (observed/null) across 12 spatial scales from
+  \SI{40}{\micro\meter} to \SI{1000}{\micro\meter}. Curves above 1 indicate
+  clustering at that scale; the envelope shows the label-shuffle null distribution.}
+  \label{fig:per_type_fingerprints}
+\end{figure}
 
-\textbf{[Figure: fig\_top\_types\_by\_effect.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_top_types_by_effect.pdf}
+  \caption{Cell types ranked by peak VMR ratio (effect size). The extreme tail is
+  dominated by mislocated types---rare visitors from adjacent brain regions that
+  cluster tightly at their primary anatomical location. Native types span a more
+  moderate range of effect sizes.}
+  \label{fig:top_types_by_effect}
+\end{figure}
 
-\textbf{[Figure: fig\_grid\_jitter\_robustness.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_grid_jitter_robustness.pdf}
+  \caption{Grid placement robustness. Peak VMR ratios computed across 10 random
+  grid origin offsets show CV~$< 5\%$ for all cell types, confirming that
+  fingerprints are independent of arbitrary grid placement.}
+  \label{fig:grid_jitter}
+\end{figure}
 
-\textbf{[Figure: fig\_native\_vs\_mislocated.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_native_vs_mislocated.pdf}
+  \caption{Native versus mislocated cell types. Types classified as ``mislocated''
+  (present in a region but primarily assigned to an adjacent region) show
+  dramatically higher effect sizes due to tight spatial confinement at their
+  primary location. Separating these from region-native types reveals the
+  biologically interpretable range of spatial organization.}
+  \label{fig:native_vs_mislocated}
+\end{figure}
 
-\textbf{[Figure: fig\_boundary\_sensitivity.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_boundary_sensitivity.pdf}
+  \caption{Boundary crop stability. Fingerprints computed on progressively cropped
+  interior regions remain stable, indicating that results are not driven by
+  edge effects or boundary artifacts.}
+  \label{fig:boundary_sensitivity}
+\end{figure}
 
 
 % ── Result 2 ──
@@ -254,9 +293,26 @@ results, and figures are available at
 % Regional comparison: isocortex vs hippocampus vs thalamus
 % Known biology recovery paragraph
 
-\textbf{[Figure: fig\_isocortex\_subclass\_fingerprints.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_isocortex_subclass_fingerprints.pdf}
+  \caption{Subclass-level VMR fingerprints in isocortex. Excitatory subtypes
+  (IT, ET, CT, L6b) show layer-specific characteristic clustering scales,
+  resolving the expected laminar hierarchy. Glial and vascular types show
+  small-scale organization consistent with local microenvironment patterning.}
+  \label{fig:subclass_fingerprints}
+\end{figure}
 
-\textbf{[Figure: fig\_regional\_comparison.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_regional_comparison.pdf}
+  \caption{Regional comparison of spatial fingerprints across isocortex,
+  hippocampus, and thalamus. Shared cell types show region-dependent
+  fingerprint variations, reflecting differences in local tissue architecture.
+  Hippocampal fingerprints show stronger mesoscale compartmentalization than
+  isocortex, consistent with dentate gyrus and CA subfield structure.}
+  \label{fig:regional_comparison}
+\end{figure}
 
 
 % ── Result 3 ──
@@ -267,9 +323,28 @@ results, and figures are available at
 % Layered vs nuclear topology comparison
 % Cross-type heatmap (supplementary?)
 
-\textbf{[Figure: fig\_curated\_cooccurrence\_isocortex.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_curated_cooccurrence_isocortex.pdf}
+  \caption{Scale-dependent cross-type co-occurrence in isocortex. Curated pairs
+  of cell types show Pearson correlation of binned counts across spatial scales.
+  Cortical layer types are overwhelmingly co-localized (96--98\% of pairs
+  positive at all scales), consistent with laminar stacking within shared
+  cortical columns.}
+  \label{fig:cooccurrence}
+\end{figure}
 
-\textbf{[Figure: fig\_layered\_vs\_nuclear.pdf]}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/fig_layered_vs_nuclear.pdf}
+  \caption{Layered versus nuclear organization. Comparison of cross-type
+  co-occurrence patterns between isocortex (layered architecture) and thalamus
+  (nuclear architecture). Isocortical types show predominantly positive
+  co-localization at all scales, while thalamic types show mixed, weak
+  associations with more frequent scale-switching---consistent with
+  non-overlapping nuclear territories versus shared laminar columns.}
+  \label{fig:layered_vs_nuclear}
+\end{figure}
 
 
 % ══════════════════════════════════════════════════════════════
