@@ -52,16 +52,19 @@ Hotelling's $T^2$ statistics.
 
 We show three principal results.
 First, cell types exhibit robust, grid-placement-independent spatial fingerprints
-whose effect sizes vary over two orders of magnitude (peak VMR ratios
-0.95--36.4$\times$ null across three regions).
+whose effect sizes span two orders of magnitude---from sub-Poisson regularity
+(peak VMR ratio $0.95\times$ null) to extreme clustering
+($36.4\times$ null)---across three brain regions.
 Second, subclass-level fingerprints in isocortex recover known laminar
 architecture, with excitatory subtypes showing layer-specific characteristic
 clustering scales, while thalamic subtypes show distinct nuclear
 compartmentalization signatures.
-Third, cross-type co-occurrence is scale-dependent: isocortical layer types
-predominantly co-localize (96--100\% positive across scales), whereas thalamic
-nuclear types show mixed, weak associations (46--64\% positive), consistent
-with the distinction between layered and nuclear brain architectures.
+Third, cross-type co-occurrence is scale-dependent: among 28 curated
+subclass pairs, isocortical layer types predominantly co-localize
+(96--100\% of pairs show positive correlation, depending on scale),
+whereas thalamic nuclear types show mixed, weak associations
+(46--64\% positive), consistent with the distinction between layered
+and nuclear brain architectures.
 
 The same VMR/chi-squared framework previously applied to protein nanoclusters
 (SMLM, nm scale) and synaptic clustering on dendrites (\si{\micro\meter} scale)
@@ -137,7 +140,7 @@ are annotated at three hierarchical levels: 34 classes, 338 subclasses, and
 Brain region assignments were obtained by merging cell coordinates with the
 Allen Common Coordinate Framework (CCF v3) parcellation. We analyzed three
 regions: isocortex (CCF division ``Isocortex''), hippocampal formation (``HPF''),
-and thalamus (``TH'').
+and thalamus (``TH''). Tissue maps are shown in Fig.~\ref{fig:tissue_maps}.
 
 \subsection{Multiscale VMR Fingerprints}
 \label{sec:vmr}
@@ -229,11 +232,18 @@ results, and figures are available at
 \subsection{Cell types exhibit robust multiscale spatial fingerprints}
 \label{sec:result1}
 
-% Per-type fingerprints across three regions
-% Effect-size ranking (not significance counting)
-% Grid jitter robustness (CV < 5% for all types)
-% Native vs mislocated type distinction
-% Boundary crop stability
+We computed VMR fingerprints for all cell types in each region
+(Fig.~\ref{fig:per_type_fingerprints}; hippocampus and thalamus in
+Figs.~\ref{fig:fingerprints_hippocampus}--\ref{fig:fingerprints_thalamus}).
+Cell types ranked by effect size reveal that the extreme tail is dominated by
+mislocated types (Fig.~\ref{fig:top_types_by_effect},
+\ref{fig:native_vs_mislocated}). Fingerprints are stable to grid placement
+(Fig.~\ref{fig:grid_jitter}; CV~$< 5\%$ for all types) and interior cropping
+(Fig.~\ref{fig:boundary_sensitivity}). Label-shuffle null distributions
+confirm that fingerprints are not artifacts of label composition
+(Figs.~\ref{fig:shuffle_isocortex}--\ref{fig:shuffle_thalamus}).
+Significance calls are robust to the cell count inclusion threshold
+(Fig.~\ref{fig:threshold_sensitivity}).
 
 \begin{figure}[htbp]
   \centering
@@ -289,9 +299,11 @@ results, and figures are available at
 \subsection{Fingerprints recover known anatomical organization}
 \label{sec:result2}
 
-% Subclass-level isocortex: layer types with distinct scales
-% Regional comparison: isocortex vs hippocampus vs thalamus
-% Known biology recovery paragraph
+At the subclass level, isocortical fingerprints resolve layer-specific
+clustering scales (Fig.~\ref{fig:subclass_fingerprints}), and regional
+comparisons reveal architecture-dependent fingerprint variation
+(Fig.~\ref{fig:regional_comparison}). Characteristic clustering scales
+for each type are summarized in Fig.~\ref{fig:characteristic_scales}.
 
 \begin{figure}[htbp]
   \centering
@@ -319,18 +331,23 @@ results, and figures are available at
 \subsection{Cross-type spatial association is scale-dependent}
 \label{sec:result3}
 
-% Curated co-occurrence panels
-% Layered vs nuclear topology comparison
-% Cross-type heatmap (supplementary?)
+Curated co-occurrence panels for isocortex are shown in
+Fig.~\ref{fig:cooccurrence} (hippocampus and thalamus in
+Figs.~\ref{fig:curated_hippocampus}--\ref{fig:curated_thalamus}).
+Full pairwise heatmaps for all three regions are in
+Figs.~\ref{fig:heatmap_isocortex}--\ref{fig:heatmap_thalamus}, with
+individual co-occurrence curves in
+Figs.~\ref{fig:cooccurrence_curves_isocortex}--\ref{fig:cooccurrence_curves_thalamus}.
+The layered versus nuclear comparison is in Fig.~\ref{fig:layered_vs_nuclear}.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{../figures/fig_curated_cooccurrence_isocortex.pdf}
-  \caption{Scale-dependent cross-type co-occurrence in isocortex. Curated pairs
-  of cell types show Pearson correlation of binned counts across spatial scales.
-  Cortical layer types are overwhelmingly co-localized (96--100\% of pairs
-  positive across scales), consistent with laminar stacking within shared
-  cortical columns.}
+  \caption{Scale-dependent cross-type co-occurrence in isocortex. Pearson
+  correlation of binned counts for 28 curated subclass pairs across spatial
+  scales. Cortical layer types are overwhelmingly co-localized (96--100\% of
+  pairs positive, depending on scale), consistent with laminar stacking within
+  shared cortical columns.}
   \label{fig:cooccurrence}
 \end{figure}
 
@@ -363,7 +380,8 @@ and interior cropping. The extreme effect-size tail is dominated by cell types
 that are rare visitors from adjacent brain regions, clustering tightly at their
 primary anatomical location. When these are separated from region-native types,
 the native effect sizes span a biologically interpretable range
-(peak ratios 0.95--5.8$\times$ for most types, with the habenular MH-LH Glut
+(peak ratios 0.95--5.8$\times$ null for most types, where values below 1
+indicate slight sub-Poisson regularity, with the habenular MH-LH Glut
 reaching 36.4$\times$ due to tight nuclear confinement).
 
 % ── Biology recovery ──
@@ -379,8 +397,8 @@ subfield architecture.
 % ── Layered vs nuclear ──
 \paragraph{Layered versus nuclear organization.}
 The subclass-level co-occurrence comparison between isocortex and thalamus
-reveals qualitatively distinct organizational motifs. Cortical layer types are
-overwhelmingly co-localized at all scales (96--100\% of pairs positive),
+reveals qualitatively distinct organizational motifs. Among 28 curated subclass pairs per region, cortical layer types are
+overwhelmingly co-localized (96--100\% of pairs positive, depending on scale),
 consistent with laminar stacking within shared cortical columns. In contrast,
 thalamic nuclear types show weak, mixed correlations (46--64\% positive), with
 more frequent scale-switching---consistent with a compartmental architecture
@@ -395,8 +413,8 @@ distinct biological systems: protein nanoclusters at nm resolution (SMLM),
 synaptic input clustering at \si{\micro\meter} resolution (dendritic trees), and
 cell type organization at \si{\milli\meter} resolution (tissue sections). In each
 case, the framework detects meaningful, scale-specific spatial structure with
-appropriate null models. This convergence supports the concept of a universal
-spatial fingerprinting toolkit for biology.
+appropriate null models (Fig.~\ref{fig:universal_comparison}). This convergence
+supports the concept of a universal spatial fingerprinting toolkit for biology.
 
 % ── Limitations ──
 \paragraph{Limitations.}
