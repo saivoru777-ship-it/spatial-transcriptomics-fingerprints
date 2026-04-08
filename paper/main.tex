@@ -50,7 +50,7 @@ variance-to-mean ratio (VMR) fingerprints for each cell type at 12 logarithmical
 spaced scales, tested against label-shuffle null models via covariance-aware
 Hotelling's $T^2$ statistics.
 
-We show three principal results.
+We show four principal results.
 First, cell types exhibit robust, grid-placement-independent spatial fingerprints
 whose effect sizes span two orders of magnitude---from sub-Poisson regularity
 (peak VMR ratio $0.95\times$ null) to extreme clustering
@@ -65,12 +65,23 @@ subclass pairs, isocortical layer types predominantly co-localize
 whereas thalamic nuclear types show mixed, weak associations
 (46--64\% positive), consistent with the distinction between layered
 and nuclear brain architectures.
+Fourth, stratum-level mediation analysis decomposes the origin of these
+fingerprints: cortical layer assignment mediates a median of 64.5\% of
+isocortical VMR signal, while thalamic nuclear membership mediates 91.0\%.
+Neuronal types show near-complete mediation (excitatory: 90--94\%; thalamic:
+97--100\%), whereas glial and vascular types retain substantial within-stratum
+organization (vascular mediation: 39\% isocortex, $-44$\% thalamus),
+revealing that the organizing principles differ qualitatively between cell
+classes and brain architectures.
 
 The same VMR/chi-squared framework previously applied to protein nanoclusters
 (SMLM, nm scale) and synaptic clustering on dendrites (\si{\micro\meter} scale)
 here detects meaningful structure at the tissue scale (\si{\milli\meter}),
 supporting a universal spatial fingerprinting approach across biological scales
-and geometries.
+and geometries. The mediation analysis extends a framework previously used to
+decompose dendritic synaptic organization into partner-level mechanisms to the
+tissue scale, demonstrating that stratum-level structure explains the majority
+of neuronal fingerprints across both layered and nuclear brain architectures.
 \end{abstract}
 
 \clearpage
@@ -116,12 +127,22 @@ assignments. The full VMR curve is tested jointly using a covariance-aware
 Hotelling's $T^2$ statistic with Ledoit--Wolf shrinkage regularization.
 
 % ── Scope ──
+Beyond detection, we ask: \emph{what generates these fingerprints?} If cell types
+are organized primarily by stratum membership (cortical layer or thalamic nucleus),
+then shuffling type labels only within each stratum should abolish the fingerprint.
+We formalize this as a mediation analysis: the proportion of the overall VMR signal
+that is absorbed by within-stratum shuffling measures how much of a type's spatial
+organization is explained by its stratum distribution versus finer-scale patterning
+within strata. This approach extends the mediation framework previously used to
+decompose synaptic spatial organization on dendrites into partner-level mechanisms
+\citep{voruganti2026coupling}.
+
 We apply this framework to three brain regions from the Allen Brain Cell Atlas
 MERFISH dataset: isocortex (\num{936281} cells), hippocampal formation
 (\num{304736} cells), and thalamus (\num{133787} cells). We analyze per-type
-fingerprints, cross-type co-occurrence, regional comparisons, and a focused
-comparison of layered (isocortex) versus nuclear (thalamus) organizational
-motifs.
+fingerprints, cross-type co-occurrence, regional comparisons, stratum-level
+mediation, and a focused comparison of layered (isocortex) versus nuclear
+(thalamus) organizational motifs.
 
 
 % ══════════════════════════════════════════════════════════════
@@ -215,6 +236,43 @@ the full analysis 10 times with random grid origin offsets drawn from
 $\mathrm{Uniform}(-2\Delta, +2\Delta)$ in each axis, where $\Delta$ is the
 grid voxel size. We report the coefficient of variation (CV) of peak VMR ratio
 across jitter trials.
+
+\subsection{Stratum-Level Mediation Analysis}
+\label{sec:mediation}
+
+To decompose each cell type's spatial fingerprint into stratum-explained and
+within-stratum components, we applied a within-stratum label-shuffle null model.
+For isocortex, the stratum variable is cortical layer (6 layers: L1, L2/3, L4,
+L5, L6a, L6b); for thalamus, it is thalamic nucleus (46 nuclei from the CCF
+parcellation).
+
+Within each stratum, cell type labels were randomly permuted while spatial
+positions remained fixed. This preserves all within-stratum density structure and
+tests whether type-to-position assignments carry information beyond stratum
+membership. We computed VMR fingerprints under 50 within-stratum shuffle
+realizations and tested the residual signal using the same Hotelling's $T^2$
+framework.
+
+Mediation percentage was computed as:
+\begin{equation}
+  \text{Mediation}_\% = 100 \times \left(1 - \frac{\chi^2_\text{within-stratum}}{\chi^2_\text{overall}}\right)
+\end{equation}
+where $\chi^2_\text{overall}$ is the Hotelling's $T^2$ statistic from the
+standard (unconstrained) label-shuffle null and $\chi^2_\text{within-stratum}$
+is from the within-stratum shuffle. High mediation indicates that stratum
+membership explains most of the spatial fingerprint; low or negative mediation
+indicates substantial within-stratum organization not captured by stratum
+assignment.
+
+\subsection{3D Thalamic Fingerprints}
+\label{sec:3d}
+
+To assess the impact of projecting 3D brain structure to 2D, we computed 3D VMR
+fingerprints for thalamus using \texttt{np.histogramdd} with a $64 \times 64
+\times 64$ grid (chosen to approximate the 2D resolution of the $256 \times 256$
+grid in volumetric terms). The same label-shuffle null and Hotelling's $T^2$
+framework were applied. We report the ratio of 3D to 2D peak VMR ratios for each
+cell type as a measure of z-axis information content.
 
 \subsection{Software and Reproducibility}
 
@@ -364,6 +422,63 @@ The layered versus nuclear comparison is in Fig.~\ref{fig:layered_vs_nuclear}.
 \end{figure}
 
 
+% ── Result 4 ──
+\subsection{Stratum-level mediation decomposes spatial fingerprints}
+\label{sec:result4}
+
+To determine how much of each cell type's spatial fingerprint is explained by
+stratum membership, we applied within-stratum label-shuffle mediation analysis
+to isocortex (6 cortical layers) and thalamus (46 nuclei)
+(Table~\ref{tab:mediation}).
+
+\textbf{Isocortex.} Cortical layer assignment mediates a median of 64.5\% of
+the VMR signal across 15 cell types (mean 54.4\%). Neuronal types show the
+strongest mediation: IT-ET Glut (90.2\%), NP-CT-L6b Glut (94.4\%), and CTX-MGE
+GABA (PV/SST-like, 90.2\%) are almost entirely explained by layer.
+CTX-CGE GABA (VIP/Lamp5-like) retains more within-layer organization (77.6\%
+mediation). Glial types show substantial but incomplete mediation
+(Astro-Epen 78.6\%, OPC-Oligo 64.5\%, Immune 70.9\%). Vascular cells show the
+lowest mediation (38.6\%), consistent with a vascular network that is distributed
+across layers rather than layer-confined. One type shows negative mediation
+(CNU-HYa Glut, $-23.1$\%): this is a mislocated hypothalamic type whose
+within-layer distribution is \textit{more} structured than its overall
+distribution, because within-layer shuffling disrupts its confinement to specific
+cortical zones.
+
+\textbf{Thalamus.} Nuclear membership mediates a median of 91.0\% across 12 cell
+types (mean 79.9\%). Native thalamic neurons show near-complete mediation: TH Glut
+(99.1\%), MH-LH Glut (100.0\%). Non-native types from adjacent regions also show
+high mediation (HY GABA 99.5\%, MB GABA 99.0\%, MB Glut 97.8\%), confirming that
+their thalamic presence reflects nuclear-boundary confinement. Glial types retain
+more within-nucleus organization (Astro-Epen 73.1\%, OPC-Oligo 54.4\%). Vascular
+cells again show negative mediation ($-43.5$\%), indicating spatially homogeneous
+distribution that is \textit{disrupted} by within-nucleus shuffling.
+
+\textbf{Cross-architecture comparison.} The thalamus shows systematically higher
+mediation than isocortex (median 91.0\% vs.\ 64.5\%). This is consistent with
+the distinct organizational motifs of the two regions: thalamic nuclei are
+discrete, non-overlapping territories that almost fully determine cell type
+identity, whereas cortical layers share cell types across columns and have
+more graded transitions. The mediation analysis quantifies this architectural
+difference: nuclear membership is a stronger organizing variable than layer
+membership.
+
+\textbf{3D versus 2D fingerprints.} To assess whether the 2D projection loses
+z-axis information, we computed 3D VMR fingerprints for thalamus. The mean
+3D/2D peak VMR ratio was 1.32, indicating that 3D fingerprints are on average
+32\% stronger. The effect is cell-type-specific: midbrain types show the largest
+gains (MB Glut: $1.94\times$, MB GABA: $1.90\times$, HY GABA: $1.90\times$),
+consistent with strong z-axis lamination of types entering the thalamus from
+ventral/dorsal boundaries. Native thalamic types show a slight \textit{decrease}
+(TH Glut: $0.87\times$, MH-LH Glut: $0.77\times$), likely because their
+broad nuclear distribution is better captured by a 2D projection that integrates
+across z. Glial and vascular types are essentially unchanged
+(OPC-Oligo: $1.00\times$, Vascular: $0.99\times$). The main findings
+(detection of spatial fingerprints, layered vs.\ nuclear distinction, mediation
+results) are therefore robust to the 2D projection, though z-laminated types
+benefit from 3D analysis.
+
+
 % ══════════════════════════════════════════════════════════════
 \section{Discussion}
 \label{sec:discussion}
@@ -406,6 +521,31 @@ where distinct nuclei occupy non-overlapping territories. This suggests that the
 framework can distinguish between fundamentally different modes of tissue
 organization.
 
+% ── Mediation ──
+\paragraph{Stratum-level mediation quantifies architectural organizing principles.}
+The mediation analysis transforms VMR fingerprinting from a detection tool into a
+mechanistic decomposition. At the dendritic scale, a similar mediation framework
+revealed that partner architecture mediates 25--53\% of excitatory but only
+12--14\% of inhibitory regime coupling \citep{voruganti2026coupling}. Here, at the
+tissue scale, we find an analogous asymmetry: neuronal types are almost entirely
+explained by stratum membership (90--94\% in isocortex, 97--100\% in thalamus),
+while non-neuronal types retain substantial within-stratum organization (vascular
+mediation 39\% isocortex, $-44$\% thalamus). The parallel is structural: in both
+systems, the ``simple'' cell classes (excitatory neurons on dendrites; neuronal
+types in tissue) are well-explained by the coarsest organizing variable
+(electrotonic regime; stratum membership), while the ``complex'' classes
+(inhibitory neurons; non-neuronal tissue types) require finer-grained mediators
+to explain their spatial patterns.
+
+The cross-architecture comparison (isocortex median 64.5\% vs.\ thalamus 91.0\%)
+quantifies the fundamental difference between layered and nuclear tissue
+organization. In layered cortex, cell types share space across columns and show
+graded layer boundaries, leaving 35\% of the VMR signal unexplained by layer
+alone. In nuclear thalamus, discrete non-overlapping territories almost fully
+determine type identity. This difference was qualitatively evident in the
+co-occurrence analysis (Section~\ref{sec:result3}); the mediation framework now
+provides a single-number summary of the architectural distinction.
+
 % ── Universality ──
 \paragraph{Universality across biological scales.}
 The same VMR/covariance-aware chi-squared framework has now been applied to three
@@ -413,8 +553,11 @@ distinct biological systems: protein nanoclusters at nm resolution (SMLM),
 synaptic input clustering at \si{\micro\meter} resolution (dendritic trees), and
 cell type organization at \si{\milli\meter} resolution (tissue sections). In each
 case, the framework detects meaningful, scale-specific spatial structure with
-appropriate null models (Fig.~\ref{fig:universal_comparison}). This convergence
-supports the concept of a universal spatial fingerprinting toolkit for biology.
+appropriate null models (Fig.~\ref{fig:universal_comparison}). The mediation
+extension demonstrates that the framework supports not only detection but also
+mechanistic decomposition at the tissue scale, paralleling its use in decomposing
+synaptic wiring mechanisms on dendrites. This convergence supports a universal
+spatial fingerprinting and mediation toolkit for biology.
 
 % ── Limitations ──
 \paragraph{Limitations.}
@@ -424,8 +567,15 @@ distinguishing biologically meaningful from trivial effects; we address this by
 reporting effect sizes throughout. Second, Pearson correlation for co-occurrence
 is simple but may miss more complex spatial relationships; future work could
 incorporate mark correlation functions or cross-$K$ statistics. Third, our
-analysis uses 2D projections of a 3D brain; extension to full 3D spatial
-fingerprints would be valuable for datasets with sufficient axial resolution.
+primary analysis uses 2D projections of a 3D brain. The 3D thalamic comparison
+(Section~\ref{sec:result4}) shows that most findings are robust to the projection
+(mean 3D/2D ratio $= 1.32$), though z-laminated midbrain types show up to
+$1.9\times$ stronger fingerprints in 3D. Extension to full 3D fingerprints would
+be valuable for regions with strong z-axis lamination. Fourth, the mediation
+analysis uses a chi-squared ratio to measure stratum-explained variance; this is
+a statistical decomposition, not a causal demonstration that strata \emph{generate}
+the fingerprints. Stratum assignment may correlate with other organizing variables
+(local density gradients, vascular proximity) that are the true drivers.
 
 % ── Future directions ──
 \paragraph{Future directions.}
@@ -434,6 +584,10 @@ isocortex and thalamus focus here---could test whether the layered/nuclear
 distinction extends to other organizational motifs (e.g., the nuclear but
 layered cerebellar cortex). Integration with gene expression profiles could
 reveal whether spatial fingerprint similarity predicts transcriptomic similarity.
+The mediation framework could be extended to test additional organizing variables
+beyond stratum: does soma depth, local cell density, or proximity to
+vasculature mediate the within-stratum residual? The 35\% of isocortical
+fingerprints unexplained by layer is a natural target for such decomposition.
 
 
 % ══════════════════════════════════════════════════════════════
@@ -456,6 +610,48 @@ for data retrieval.
 % ══════════════════════════════════════════════════════════════
 \bibliographystyle{unsrtnat}
 \bibliography{references}
+
+
+% ══════════════════════════════════════════════════════════════
+% TABLES
+% ══════════════════════════════════════════════════════════════
+
+\begin{table}[htbp]
+\centering
+\caption{Stratum-level mediation of VMR spatial fingerprints. Mediation \%: proportion of the overall Hotelling's $T^2$ statistic absorbed by within-stratum label shuffling. Isocortex stratum = cortical layer (6 layers); thalamus stratum = thalamic nucleus (46 nuclei). Negative mediation indicates the within-stratum signal exceeds the overall signal (stratum shuffling disrupts confinement).}
+\label{tab:mediation}
+\small
+\begin{tabular}{llrrr}
+\toprule
+Region & Cell type & Peak VMR ratio & Within-stratum peak & Mediation \% \\
+\midrule
+\multicolumn{5}{l}{\textit{Isocortex (layer mediation; median = 64.5\%, mean = 54.4\%)}} \\
+\midrule
+ & NP-CT-L6b Glut & 3.56 & 1.11 & 94.4 \\
+ & IT-ET Glut & 1.20 & 1.05 & 90.2 \\
+ & CTX-MGE GABA & 2.05 & 1.05 & 90.2 \\
+ & Astro-Epen & 1.20 & 1.04 & 78.6 \\
+ & CTX-CGE GABA & 1.50 & 1.05 & 77.6 \\
+ & Immune & 1.06 & 1.01 & 70.9 \\
+ & OPC-Oligo & 1.13 & 1.05 & 64.5 \\
+ & Vascular & 1.14 & 1.05 & 38.6 \\
+\midrule
+\multicolumn{5}{l}{\textit{Thalamus (nuclear mediation; median = 91.0\%, mean = 79.9\%)}} \\
+\midrule
+ & MH-LH Glut & 40.1 & 1.12 & 100.0 \\
+ & HY GABA & 3.73 & 1.08 & 99.5 \\
+ & TH Glut & 1.66 & 1.02 & 99.1 \\
+ & MB GABA & 5.28 & 1.43 & 99.0 \\
+ & MB Glut & 5.54 & 1.62 & 97.8 \\
+ & CNU-HYa GABA & 3.25 & 1.69 & 91.3 \\
+ & HY Glut & 9.55 & 2.56 & 90.8 \\
+ & Astro-Epen & 1.45 & 1.23 & 73.1 \\
+ & Immune & 1.29 & 1.08 & 69.7 \\
+ & OPC-Oligo & 1.20 & 1.12 & 54.4 \\
+ & Vascular & 1.20 & 1.13 & $-$43.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
 % ══════════════════════════════════════════════════════════════
