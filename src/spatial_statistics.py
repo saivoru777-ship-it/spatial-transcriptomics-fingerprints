@@ -1,4 +1,4 @@
-"""2D multiscale spatial statistics for tissue sections.
+"""2D and 3D multiscale spatial statistics for tissue sections.
 
 Computes VMR (Variance-to-Mean Ratio) and skewness across spatial scales
 using grid-based binning. Adapted from smlm-clustering/core/multiscale_detector.py
@@ -7,6 +7,9 @@ using grid-based binning. Adapted from smlm-clustering/core/multiscale_detector.
 For tissue sections, cells are discrete objects on a 2D plane. We use simple
 histogram binning rather than CIC interpolation, since cells are larger objects
 (~10μm) rather than point localizations.
+
+The 3D extension (TissueMultiscaleTest3D) uses np.histogramdd for volumetric
+analysis, needed for regions like thalamus where z-lamination is prominent.
 """
 
 from dataclasses import dataclass, field
@@ -355,6 +358,90 @@ class TissueMultiscaleTest:
         result['real_curve'] = real_curve
         result['mock_curves'] = mock_curves
         return result
+
+
+class TissueMultiscaleTest3D:
+    """3D multiscale VMR/skewness test for volumetric tissue data.
+
+    Extends TissueMultiscaleTest to 3D using np.histogramdd. Needed for
+    brain regions where z-lamination is prominent (e.g., thalamus).
+    """
+
+    def __init__(self, roi_size_um, grid_size=64, roi_origin=None):
+        self.roi_size_um = np.asarray(roi_size_um, dtype=float)
+        if self.roi_size_um.ndim == 0:
+            self.roi_size_um = np.array([self.roi_size_um] * 3)
+        self.grid_size = grid_size
+        self.roi_origin = (np.asarray(roi_origin, dtype=float)
+                           if roi_origin is not None
+                           else np.zeros(3))
+        self.um_per_vox = self.roi_size_um / grid_size
+
+    @classmethod
+    def from_positions(cls, positions, grid_size=64, padding=0.01):
+        """Create from 3D data bounds."""
+        positions = np.asarray(positions, dtype=float)
+        mins = positions.min(axis=0)
+        maxs = positions.max(axis=0)
+        span = maxs - mins
+        pad = span * padding
+        roi_origin = mins - pad
+        roi_size = span + 2 * pad
+        return cls(roi_size, grid_size, roi_origin)
+
+    def grid_positions(self, positions):
+        """Bin positions onto a 3D density grid."""
+        positions = np.asarray(positions, dtype=float)
+        pos_norm = ((positions - self.roi_origin) / self.roi_size_um
+                    * self.grid_size)
+        pos_norm = np.clip(pos_norm, 0, self.grid_size - 1e-9)
+        grid, _ = np.histogramdd(
+            pos_norm,
+            bins=self.grid_size,
+            range=[[0, self.grid_size]] * 3,
+        )
+        return grid
+
+    def bin_counts(self, grid, cell_size):
+        """Compute counts in non-overlapping 3D cells."""
+        gs = self.grid_size
+        nc = gs // cell_size
+        if nc < 2:
+            return np.array([grid.sum()])
+        trimmed = grid[:nc * cell_size, :nc * cell_size, :nc * cell_size]
+        counts = trimmed.reshape(
+            nc, cell_size, nc, cell_size, nc, cell_size
+        ).sum(axis=(1, 3, 5))
+        return counts.ravel()
+
+    def variance_at_scale(self, grid, cell_size):
+        counts = self.bin_counts(grid, cell_size)
+        mean = counts.mean()
+        if mean < 1e-10:
+            return 1.0
+        return float(counts.var() / mean)
+
+    def skewness_at_scale(self, grid, cell_size):
+        counts = self.bin_counts(grid, cell_size)
+        if counts.std() < 1e-10:
+            return 0.0
+        return float(stats.skew(counts))
+
+    def compute_curves(self, positions, scale_range):
+        """Compute VMR and skewness curves across scales (3D)."""
+        grid = self.grid_positions(positions)
+        vmr_curve = []
+        skew_curve = []
+        for cs in scale_range.cell_sizes_vox:
+            vmr_curve.append(self.variance_at_scale(grid, cs))
+            skew_curve.append(self.skewness_at_scale(grid, cs))
+        return {
+            'vmr': vmr_curve,
+            'skewness': skew_curve,
+            'scales_um': list(scale_range.cell_sizes_um),
+            'scales_vox': list(scale_range.cell_sizes_vox),
+            'n_points': len(positions),
+        }
 
 
 def chi_squared_with_covariance(real_values, mock_matrix, shrinkage=0.02):
