@@ -1,0 +1,178 @@
+{
+  "analysis": "continuous_depth_mediation",
+  "region": "isocortex",
+  "n_depth_bins": 5,
+  "n_mocks": 50,
+  "results": [
+    {
+      "cell_type": "01 IT-ET Glut",
+      "n_cells": 441026,
+      "chi2_overall": 35469.67788785198,
+      "chi2_layer_only": 3067.2360952923777,
+      "chi2_layer_plus_depth": 1654.6014584241664,
+      "mediation_layer_only": 91.35251212319898,
+      "mediation_layer_plus_depth": 95.33516638167484,
+      "depth_increment_pct": 3.9826542584758613,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "02 NP-CT-L6b Glut",
+      "n_cells": 131873,
+      "chi2_overall": 111031.44292496462,
+      "chi2_layer_only": 4256.848924476028,
+      "chi2_layer_plus_depth": 2544.887183809865,
+      "mediation_layer_only": 96.16608699992054,
+      "mediation_layer_plus_depth": 97.70795810919101,
+      "depth_increment_pct": 1.541871109270474,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "03 OB-CR Glut",
+      "n_cells": 133,
+      "chi2_overall": 1140.2922493575143,
+      "chi2_layer_only": 570.6245915695242,
+      "chi2_layer_plus_depth": 399.021769642533,
+      "mediation_layer_only": 49.95803997694129,
+      "mediation_layer_plus_depth": 65.0070611400404,
+      "depth_increment_pct": 15.049021163099113,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "05 OB-IMN GABA",
+      "n_cells": 354,
+      "chi2_overall": 177086.05226664338,
+      "chi2_layer_only": 96079.9811686376,
+      "chi2_layer_plus_depth": 93507.94074564667,
+      "mediation_layer_only": 45.74390250454773,
+      "mediation_layer_plus_depth": 47.19632656057566,
+      "depth_increment_pct": 1.4524240560279367,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "06 CTX-CGE GABA",
+      "n_cells": 26330,
+      "chi2_overall": 735.6070967040642,
+      "chi2_layer_only": 146.6469779809504,
+      "chi2_layer_plus_depth": 148.43835286288626,
+      "mediation_layer_only": 80.0644965718776,
+      "mediation_layer_plus_depth": 79.82097324400839,
+      "depth_increment_pct": -0.24352332786921238,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "07 CTX-MGE GABA",
+      "n_cells": 56619,
+      "chi2_overall": 2449.8606264897153,
+      "chi2_layer_only": 231.9866006868248,
+      "chi2_layer_plus_depth": 314.3651870465546,
+      "mediation_layer_only": 90.53062046965394,
+      "mediation_layer_plus_depth": 87.16803790193596,
+      "depth_increment_pct": -3.362582567717979,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "08 CNU-MGE GABA",
+      "n_cells": 848,
+      "chi2_overall": 52.45872559568125,
+      "chi2_layer_only": 26.558539766234237,
+      "chi2_layer_plus_depth": 31.894577826697258,
+      "mediation_layer_only": 49.37250292557486,
+      "mediation_layer_plus_depth": 39.20062398671189,
+      "depth_increment_pct": -10.171878938862967,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "09 CNU-LGE GABA",
+      "n_cells": 225,
+      "chi2_overall": 15749.932115353131,
+      "chi2_layer_only": 8348.589071102297,
+      "chi2_layer_plus_depth": 8189.482367230858,
+      "mediation_layer_only": 46.99285679482998,
+      "mediation_layer_plus_depth": 48.00306244337587,
+      "depth_increment_pct": 1.0102056485458846,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "13 CNU-HYa Glut",
+      "n_cells": 177,
+      "chi2_overall": 16784.55813116079,
+      "chi2_layer_only": 14437.838325212011,
+      "chi2_layer_plus_depth": 13684.443089043816,
+      "mediation_layer_only": 13.981421420871708,
+      "mediation_layer_plus_depth": 18.470042630205207,
+      "depth_increment_pct": 4.488621209333498,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "19 MB Glut",
+      "n_cells": 239,
+      "chi2_overall": 64736.633510532214,
+      "chi2_layer_only": 34372.2910491994,
+      "chi2_layer_plus_depth": 23216.20456995663,
+      "mediation_layer_only": 46.9044199778982,
+      "mediation_layer_plus_depth": 64.13745462037424,
+      "depth_increment_pct": 17.233034642476042,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "20 MB GABA",
+      "n_cells": 413,
+      "chi2_overall": 249384.09222964785,
+      "chi2_layer_only": 106913.72811643152,
+      "chi2_layer_plus_depth": 85516.96313364823,
+      "mediation_layer_only": 57.12889015471807,
+      "mediation_layer_plus_depth": 65.7087337171053,
+      "depth_increment_pct": 8.579843562387232,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "30 Astro-Epen",
+      "n_cells": 103517,
+      "chi2_overall": 2308.7711932773755,
+      "chi2_layer_only": 744.9815897013407,
+      "chi2_layer_plus_depth": 620.9336783084395,
+      "mediation_layer_only": 67.73255003048547,
+      "mediation_layer_plus_depth": 73.10544760275685,
+      "depth_increment_pct": 5.372897572271384,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "31 OPC-Oligo",
+      "n_cells": 55061,
+      "chi2_overall": 510.4909762338399,
+      "chi2_layer_only": 282.61359428799057,
+      "chi2_layer_plus_depth": 628.4944050890903,
+      "mediation_layer_only": 44.63886582815243,
+      "mediation_layer_plus_depth": -23.115673802076508,
+      "depth_increment_pct": -67.75453963022895,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "33 Vascular",
+      "n_cells": 104163,
+      "chi2_overall": 1531.2350052320699,
+      "chi2_layer_only": 1102.837828950405,
+      "chi2_layer_plus_depth": 967.1940330414972,
+      "mediation_layer_only": 27.977232418138065,
+      "mediation_layer_plus_depth": 36.83568950966401,
+      "depth_increment_pct": 8.858457091525942,
+      "n_compound_strata": 30
+    },
+    {
+      "cell_type": "34 Immune",
+      "n_cells": 15228,
+      "chi2_overall": 185.46498917670817,
+      "chi2_layer_only": 77.4900784058089,
+      "chi2_layer_plus_depth": 63.95294102442655,
+      "mediation_layer_only": 58.21848708492493,
+      "mediation_layer_plus_depth": 65.51751286950812,
+      "depth_increment_pct": 7.299025784583193,
+      "n_compound_strata": 30
+    }
+  ],
+  "summary": {
+    "n_types": 15,
+    "mean_depth_increment": -0.4442978911121699,
+    "median_depth_increment": 3.9826542584758613
+  }
+}
