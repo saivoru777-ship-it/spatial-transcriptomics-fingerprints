@@ -475,13 +475,15 @@ isocortical residual reflects imperfect discretization of a continuous
 depth gradient into 6 discrete layers. To test this, we created compound strata
 by binning the z-coordinate (cortical depth) into quintiles within each layer
 (30 strata total) and repeated the mediation analysis. Adding continuous depth
-increases mediation by a median of $+3.8$ percentage points (mean $+3.7$; range
-$-67.8$ to $+17.2$). For the major neuronal types, the increment is modest:
-IT-ET Glut $+4.0$\%, NP-CT-L6b Glut $+1.5$\%, CTX-MGE GABA $-3.4$\%,
-CTX-CGE GABA $-0.2$\%. This confirms that discrete layer labels capture
-most of the depth-organized signal, and the isocortical residual primarily
-reflects non-depth spatial structure (tangential organization, local niche
-features) rather than a discretization artifact.
+increases mediation by a median of $+3.8$ percentage points for the major
+neuronal and glial types: IT-ET Glut $+4.0$\%, NP-CT-L6b Glut $+1.5$\%,
+Astro-Epen $+5.4$\%, CTX-MGE GABA $-3.4$\%, CTX-CGE GABA $-0.2$\%.
+One outlier (OPC-Oligo: $-67.8$\%) likely reflects chi-squared instability
+from over-partitioning into sparse compound strata; excluding this, the
+range is $-10.2$ to $+17.2$ percentage points. This confirms that discrete
+layer labels capture most of the depth-organized signal, and the isocortical
+residual primarily reflects non-depth spatial structure (tangential
+organization, local niche features) rather than a discretization artifact.
 
 \textbf{3D versus 2D fingerprints.} To assess whether the 2D projection loses
 z-axis information, we computed 3D VMR fingerprints for thalamus. The mean
@@ -530,8 +532,12 @@ than isocortex, consistent with the highly structured dentate gyrus and CA
 subfield architecture.
 
 The sub-Poisson regularity observed for Astro-Epen (peak VMR ratio $0.95\times$
-null) and Immune cells ($0.96\times$) is consistent with two well-documented
-active spacing mechanisms. Protoplasmic astrocytes occupy non-overlapping
+null) and Immune cells ($0.96\times$) is, to our knowledge, the first report of
+below-random spatial regularity in spatial transcriptomics data. While
+exclusion zone spacing is well-characterized in histological studies of retinal
+mosaics \citep{Keeley2020}, it has not previously been detected at the
+whole-brain tissue scale. The sub-Poisson signal is consistent with two
+well-documented active spacing mechanisms. Protoplasmic astrocytes occupy non-overlapping
 territorial domains with only 2--5\% volumetric overlap between neighbors
 \citep{Bushong2002}, maintained through neuron-induced branch avoidance that
 creates $\sim$40--60~\si{\micro\meter} exclusion zones
